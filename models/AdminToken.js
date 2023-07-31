@@ -1,0 +1,8 @@
+import mongoose from "mongoose";
+
+const AdminTokenShema = new mongoose.Schema({
+    user: {type: mongoose.Schema.Types.ObjectId, ref: 'Admin'},
+    refreshToken: {type: String, required: true},
+},{timestamps: true})
+
+export default mongoose.model('AdminToken',AdminTokenShema)
