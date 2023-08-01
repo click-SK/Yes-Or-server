@@ -59,7 +59,6 @@ export const findToken = async (refreshToken) => {
 
 export const validateAccessToken = async (token) => {
     try {
-        console.log('token',token);
         const userData = await jwt.verify(token, process.env.SECRET_KEY_ACCESS);
         return userData;
         

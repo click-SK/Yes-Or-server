@@ -1,7 +1,8 @@
 import * as UserService from "../services/UserService.js";
 import bcrypt from 'bcrypt';
 import UserModel from "../models/User.js";
-
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
 export const register = async (req, res) => {
   try {
     const {
@@ -105,9 +106,32 @@ export const updateUserData = async (req, res) => {
     if(!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+    
+    if(req.file && req.file.originalname) {
+      const uniqueFileName = uuidv4() + '_' + req.file.originalname;
+      const oldFilename = user.userImage;
+      const newFilename = `/uploadsUser${req.file.originalname}`;
+      const previousImage = oldFilename.slice(1);
+      const newImage = newFilename.slice(1);
 
-    if(req?.file?.originalname) {
-      user.userImage = `/uploadsUser/${req.file.originalname}`;
+      if(previousImage) {
+        try {
+          console.log('previousImage',previousImage);
+          // Перевіряємо існування файлу перед видаленням
+          if (fs.existsSync(previousImage)) {
+            console.log('checked old file true');
+            fs.promises.unlink(previousImage);
+          }
+        } catch (error) {
+          console.log('Помилка видалення попереднього зображення:', error);
+        }
+      }
+
+      user.userImage = `/uploadsUser/${uniqueFileName}`;
+      fs.rename(`./uploadsUser/${req.file.originalname}`, `./uploadsUser/${uniqueFileName}`, (err) => {
+        if (err) throw err; // не удалось переименовать файл
+        console.log("Файл успешно переименован");
+      });
     }
 
     user.firstName = firstName;
@@ -127,6 +151,7 @@ export const updateUserData = async (req, res) => {
     console.log(e);
   }
 };
+
 export const updateUserPassword = async (req, res) => {
   try {
     const { id, currentPassword, newPassword } = req.body;

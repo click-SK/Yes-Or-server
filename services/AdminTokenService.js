@@ -50,9 +50,7 @@ export const validateRefreshToken = async (token) => {
 }
 export const findToken = async (refreshToken) => {
     try {
-        console.log('findToken refreshToken',refreshToken);
         const tokenData = await TokenModel.findOne({refreshToken});
-        console.log('tokenData',tokenData);
         return tokenData;
     } catch (e) {
         console.log(e);
