@@ -1,8 +1,8 @@
 import { Router } from "express";
 import multer from 'multer';
 import * as UsersController from '../controllers/UserController.js';
-// import checkAuthUser from '../utils/checkAuthUser.js';
-
+import authMiddleware from "../moddlewares/auth-middleware.js";
+import fs from 'fs';
 const router = new Router();
 
 const storage = multer.diskStorage({
@@ -19,8 +19,11 @@ const storage = multer.diskStorage({
 
 const upload = multer({storage})
 
-router.post('/register-user',upload.single('userImage'),UsersController.register);
+router.post('/register-user',UsersController.register);
 router.post('/login-user',UsersController.login);
 router.post('/logout-user',UsersController.logout);
 router.get('/refresh-user',UsersController.refresh);
+router.get('/get-me/:id',authMiddleware,UsersController.getMe);
+router.patch('/update-user-data',upload.single('userImage'),UsersController.updateUserData);
+router.patch('/update-user-password',UsersController.updateUserPassword);
 export default router;

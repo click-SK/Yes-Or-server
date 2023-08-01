@@ -40,7 +40,6 @@ export const removeToken = async (refreshToken) => {
 export const validateRefreshToken = async (token) => {
     try {
         const userData = jwt.verify(token, process.env.SECRET_KEY_REFRESH);
-        console.log('userData refresh token',userData);
         if(!userData) {
             return { error: 'User not found' };
         }
@@ -55,5 +54,16 @@ export const findToken = async (refreshToken) => {
         return tokenData;
     } catch (e) {
         console.log(e);
+    }
+}
+
+export const validateAccessToken = async (token) => {
+    try {
+        console.log('token',token);
+        const userData = await jwt.verify(token, process.env.SECRET_KEY_ACCESS);
+        return userData;
+        
+    } catch (e) {
+        return null;
     }
 }

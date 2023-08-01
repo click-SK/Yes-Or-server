@@ -10,7 +10,8 @@ const UserSchema = new mongoose.Schema({
     password: String,
     passport: String,
     requisites: String,
-    isVerified: Boolean
+    isVerified: Boolean,
+    isActivated: Boolean,
 },{timestamps: true,})
 
 export default mongoose.model('User',UserSchema)
