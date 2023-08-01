@@ -65,15 +65,16 @@ export const logout = async (refreshToken) => {
 
 export const refresh = async (token) => {
   try {
-    console.log("token", token);
     if (!token) {
       return { error: "Token Error" };
     }
 
+    console.log('token',token);
+
     const tokenFromDb = await TokenService.findToken(token);
     const userData = await TokenService.validateRefreshToken(token);
-    console.log("tokenFromDb", tokenFromDb);
-    console.log("userData", userData);
+    console.log('tokenFromDb',tokenFromDb);
+    console.log('userData',userData);
 
     if (!userData || !tokenFromDb) {
       return { error: "Validation error" };

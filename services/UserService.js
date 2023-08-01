@@ -71,15 +71,17 @@ export const logout = async (refreshToken) => {
 
 export const refresh = async (token) => {
   try {
-    console.log("token", token);
     if (!token) {
       return { error: "Token Error" };
     }
 
+    console.log('token',token);
+
     const tokenFromDb = await TokenService.findToken(token);
     const userData = await TokenService.validateRefreshToken(token);
-    console.log("tokenFromDb", tokenFromDb);
-    console.log("userData", userData);
+
+    console.log('tokenFromDb',tokenFromDb);
+    console.log('userData',userData);
 
     if (!userData || !tokenFromDb) {
       return { error: "Validation error" };
@@ -91,6 +93,15 @@ export const refresh = async (token) => {
     const { accessToken, refreshToken } = tokens;
     await TokenService.saveTokens(userDto.id, refreshToken);
     return { refreshToken, accessToken, user };
+  } catch (e) {
+    console.log(e);
+  }
+};
+export const getMe = async (id) => {
+  try {
+    const user = await UserModel.findOne({_id: id})
+    return user
+
   } catch (e) {
     console.log(e);
   }
