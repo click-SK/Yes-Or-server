@@ -48,6 +48,17 @@ export const validateRefreshToken = async (token) => {
         return null;
     }
 }
+
+export const validateAccessToken = async (token) => {
+    try {
+        const userData = await jwt.verify(token, process.env.SECRET_KEY_ACCESS);
+        return userData;
+        
+    } catch (e) {
+        return null;
+    }
+}
+
 export const findToken = async (refreshToken) => {
     try {
         const tokenData = await TokenModel.findOne({refreshToken});
@@ -56,5 +67,3 @@ export const findToken = async (refreshToken) => {
         console.log(e);
     }
 }
-
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluIiwiaWQiOiI2NGM4ZDdlODE2Y2Y1NmVmNGYzYzNiZmYiLCJpYXQiOjE2OTA4ODQzNTEsImV4cCI6MTY5MzQ3NjM1MX0.mA5xW9DgmV_PAILXR8mSgMT6E1bv-vnIE6OUNc3wWlw'

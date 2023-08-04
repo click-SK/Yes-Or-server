@@ -12,6 +12,7 @@ const UserSchema = new mongoose.Schema({
     requisites: String,
     isVerified: Boolean,
     isActivated: Boolean,
+    userDocuments: [String],
 },{timestamps: true,})
 
 export default mongoose.model('User',UserSchema)
