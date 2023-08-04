@@ -1,4 +1,4 @@
-import * as TokenService from '../services/UserTokenService.js';
+import * as TokenService from '../services/AdminTokenService.js';
 export default async function (req, res, next) {
     try {
         const authorizationHeader = req.headers.authorization;

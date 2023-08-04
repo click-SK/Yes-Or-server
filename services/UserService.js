@@ -8,7 +8,7 @@ export const registration = async (email, firstName, lastName, password, socialN
     const canditate = await UserModel.findOne({ email });
 
     if (canditate) {
-      return { error: "A user with this email already exists" };
+      return { message: "Email already exists" };
     }
     const salt = await bcrypt.genSalt(10);
     const hash = await bcrypt.hash(password, salt);
@@ -22,7 +22,9 @@ export const registration = async (email, firstName, lastName, password, socialN
       socialNetwork,
       passport,
       requisites,
-      isVerified: false
+      isVerified: false,
+      userImage: '',
+      isActivated: true
     });
 
     const userDto = UserDto.createUserDto(user);
@@ -42,6 +44,10 @@ export const login = async (email, password) => {
 
     if (!user) {
       return { error: "User not found" };
+    }
+
+    if(!user.isActivated) {
+      return { error: "User blocked" };
     }
 
     const isvalidPassword = await bcrypt.compare(password, user.password);
@@ -75,33 +81,22 @@ export const refresh = async (token) => {
       return { error: "Token Error" };
     }
 
-    console.log('token',token);
-
     const tokenFromDb = await TokenService.findToken(token);
     const userData = await TokenService.validateRefreshToken(token);
-
-    console.log('tokenFromDb',tokenFromDb);
-    console.log('userData',userData);
 
     if (!userData || !tokenFromDb) {
       return { error: "Validation error" };
     }
 
     const user = await UserModel.findById(userData.id);
+    if(!user.isActivated) {
+      return { error: "User blocked" };
+    }
     const userDto = UserDto.createUserDto(user);
     const tokens = await TokenService.generateTokens({ ...userDto });
     const { accessToken, refreshToken } = tokens;
     await TokenService.saveTokens(userDto.id, refreshToken);
     return { refreshToken, accessToken, user };
-  } catch (e) {
-    console.log(e);
-  }
-};
-export const getMe = async (id) => {
-  try {
-    const user = await UserModel.findOne({_id: id})
-    return user
-
   } catch (e) {
     console.log(e);
   }
