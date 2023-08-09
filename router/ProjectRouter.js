@@ -20,4 +20,5 @@ const upload = multer({storage})
 
 router.post('/create-project',upload.array('projectMedia'),ProjectController.createProject);
 router.get('/get-all-projects',ProjectController.getAllProject);
+router.get('/get-one-project/:id', ProjectController.getOneProject);
 export default router;
