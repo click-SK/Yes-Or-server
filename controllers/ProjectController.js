@@ -65,3 +65,15 @@ export const getAllProject = async (req,res) => {
     console.log(error);
   }
 }
+
+
+export const getOneProject = async (req, res) => {
+  try {
+    const {id} = req.params;
+    const project = await ProjectModel.findById(id)
+
+    res.json(project)
+  } catch (error) {
+    console.log(error);
+  }
+}
