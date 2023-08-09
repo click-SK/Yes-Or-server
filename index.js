@@ -6,6 +6,8 @@ import cookieParser from "cookie-parser";
 
 import UserRouter from './router/UserRouter.js';
 import AdminRouter from './router/AdminRouter.js';
+import ProjectRouter from './router/ProjectRouter.js';
+import ProjectCategoryRouter from './router/ProjectCategoryRouter.js';
 
 dotenv.config();
 
@@ -26,8 +28,11 @@ app.use(
 app.use(cookieParser());
 
 app.use('/api/uploadsUser', express.static('uploadsUser'));
+app.use('/api/uploadsProject', express.static('uploadsProject'));
 app.use('/api',UserRouter)
 app.use('/api',AdminRouter)
+app.use('/api',ProjectRouter)
+app.use('/api',ProjectCategoryRouter)
 
 
 app.listen(process.env.PORT, () => {

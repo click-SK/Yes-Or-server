@@ -13,6 +13,10 @@ const UserSchema = new mongoose.Schema({
     isVerified: Boolean,
     isActivated: Boolean,
     userDocuments: [String],
+    projects: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Project",
+    }],
 },{timestamps: true,})
 
 export default mongoose.model('User',UserSchema)
