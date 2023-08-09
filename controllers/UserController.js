@@ -228,103 +228,6 @@ export const updateUserData = async (req, res) => {
   }
 };
 
-
-// export const uploadUserDocuments = async (req, res) => {
-//   try {
-//     const { id } = req.body;
-//     const user = await UserModel.findById(id);
-
-//     console.log('req.files',req.files);
-
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found' });
-//     }
-
-//     if (req.files && req.files.length > 0) {
-//       user.userDocuments.forEach((item) => {
-//         const previousImage = item.slice(1);
-//         console.log('previousImage',previousImage);
-//         if(item) {
-//           try {
-//             // Перевіряємо існування файлу перед видаленням
-//             if (fs.existsSync(previousImage)) {
-//               console.log('Файл існує');
-//               fs.promises.unlink(previousImage);
-//             }
-//           } catch (error) {
-//             console.log('Помилка видалення попереднього зображення:', error);
-//           }
-//         }
-//       })
-//       // Process the uploaded files as needed
-//       const newImages = req.files.map((file) => `/uploadsUser/${file.filename}`);
-//       console.log('newImages',newImages);
-//       user.userDocuments = newImages;
-//       fs.rename(`./uploadsUser/${req.file.originalname}`, `./uploadsUser/${uniqueFileName}`, (err) => {
-//         if (err) throw err; // не удалось переименовать файл
-//         console.log("Файл успешно переименован");
-//       });
-//     }
-
-//     await user.save();
-
-//     res.json(user);
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ message: 'Помилка сервера' });
-//   }
-// };
-
-// export const uploadUserDocuments = async (req, res) => {
-//   try {
-//     const { id } = req.body;
-//     const user = await UserModel.findById(id);
-
-//     console.log('req.files',req.files);
-
-//     if (!user) {
-//       return res.status(404).json({ error: 'User not found' });
-//     }
-
-//     if (req.files && req.files.length > 0) {
-//       user.userDocuments.forEach((item) => {
-//         const previousImage = item.slice(1);
-//         console.log('previousImage',previousImage);
-//         if(item) {
-//           try {
-//             // Перевіряємо існування файлу перед видаленням
-//             if (fs.existsSync(previousImage)) {
-//               console.log('Файл існує');
-//               fs.promises.unlink(previousImage);
-//             }
-//           } catch (error) {
-//             console.log('Помилка видалення попереднього зображення:', error);
-//           }
-//         }
-//       })
-//       // Process the uploaded files as needed
-//       const newImages = [];
-//       req.files.forEach((file) => {
-//        const uniqueFileName = uuidv4() + '_' + `/uploadsUser/${file.filename}`;
-//        newImages.push(uniqueFileName);
-//        fs.rename(`./uploadsUser/${file.filename}`, `./uploadsUser/${uniqueFileName}`, (err) => {
-//         if (err) throw err; // не удалось переименовать файл
-//         console.log("Файл успешно переименован");
-//       });
-//       });
-//       console.log('newImages',newImages);
-//       user.userDocuments = newImages;
-//     }
-
-//     await user.save();
-
-//     res.json(user);
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).json({ message: 'Помилка сервера' });
-//   }
-// };
-
 export const uploadUserDocuments = async (req, res) => {
   try {
     const { id } = req.body;
@@ -375,3 +278,15 @@ export const uploadUserDocuments = async (req, res) => {
     res.status(500).json({ message: 'Помилка сервера' });
   }
 };
+
+export const getMyProjects = async (req, res) => {
+  try {
+    const id = req.params.id;
+    // const user = await UserModel.findById(id);
+    // res.json(user.projects.populate('projects'))
+    const user = await UserModel.findById(id).populate('projects'); // Виправлено
+    res.json(user.projects);
+  } catch (error) {
+    console.log(error);
+  }
+}

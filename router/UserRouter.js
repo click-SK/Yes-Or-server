@@ -31,4 +31,5 @@ router.patch('/update-user-data',upload.single('userImage'),UsersController.upda
 router.patch('/update-user-password',UsersController.updateUserPassword);
 router.patch('/update-user-activated',UsersController.blockedUser);
 router.patch('/update-user-verified',UsersController.verifiedUser);
+router.get('/get-my-projects/:id',UsersController.getMyProjects);
 export default router;
