@@ -19,12 +19,13 @@ mongoose.connect(db).then(() => {
 });
 
 app.use(express.json());
-app.use(
-  cors({
-    credentials: true,
-    origin: process.env.CLIENT_URL,
-  })
-);
+app.use(cors({
+  credentials: true,
+  origin: [
+    process.env.CLIENT_URL,
+    process.env.LOCALHOST_URL
+  ]
+}));
 app.use(cookieParser());
 
 app.use('/api/uploadsUser', express.static('uploadsUser'));
