@@ -84,7 +84,7 @@ export const refresh = async (token) => {
     const tokenFromDb = await TokenService.findToken(token);
     const userData = await TokenService.validateRefreshToken(token);
 
-    if (!userData || !tokenFromDb) {
+    if (!userData) {
       return { error: "Validation error" };
     }
 

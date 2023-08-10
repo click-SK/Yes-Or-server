@@ -31,10 +31,12 @@ export const register = async (req, res) => {
 
     if (userData.error) {
     }
-    res.cookie("Y_O_U_refreshToken", userData.refreshToken, {
+    await res.cookie('Y_O_U_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-    });
+      secure: true,
+      sameSite: 'none'
+  });
     return res.json(userData);
   } catch (error) {
     console.error("Помилка реєстрації користувача:", error);
@@ -51,10 +53,12 @@ export const login = async (req, res) => {
       return res.json({ message: userData.error });
     }
 
-    res.cookie("Y_O_U_refreshToken", userData.refreshToken, {
+    await res.cookie('Y_O_U_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-    });
+      secure: true,
+      sameSite: 'none'
+  });
     return res.json(userData);
   } catch (e) {
     console.log(e);
@@ -79,10 +83,12 @@ export const refresh = async (req, res) => {
     if (userData.error) {
       return res.status(503).json({ message: userData.error });
     }
-    res.cookie("Y_O_U_refreshToken", userData.refreshToken, {
+    await res.cookie('Y_O_U_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
       httpOnly: true,
-    });
+      secure: true,
+      sameSite: 'none'
+  });
     return res.json(userData);
   } catch (e) {
     console.log(e);
@@ -282,9 +288,7 @@ export const uploadUserDocuments = async (req, res) => {
 export const getMyProjects = async (req, res) => {
   try {
     const id = req.params.id;
-    // const user = await UserModel.findById(id);
-    // res.json(user.projects.populate('projects'))
-    const user = await UserModel.findById(id).populate('projects'); // Виправлено
+    const user = await UserModel.findById(id).populate('projects');
     res.json(user.projects);
   } catch (error) {
     console.log(error);
