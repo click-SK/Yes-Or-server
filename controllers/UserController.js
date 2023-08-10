@@ -97,7 +97,7 @@ export const refresh = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const userId = req.params.id;
-    const userData = await UserModel.findOne({_id: userId})
+    const userData = await UserModel.findOne({_id: userId}).populate(['projects','savedProjects'])
     return res.json(userData);
   } catch (e) {
     console.log(e);
