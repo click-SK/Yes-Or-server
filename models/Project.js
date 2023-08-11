@@ -16,7 +16,12 @@ const ProjectSchema = new mongoose.Schema({
     period: Number,
     target: Number,
     bonus: String,
-    isVerified: Boolean
+    isVerified: Boolean,
+    amountCollected: Number,
+    donatsHistory: [{
+        sum: Number,
+        user: String
+    }]
 },{timestamps: true,})
 
 export default mongoose.model('Project',ProjectSchema)
