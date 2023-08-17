@@ -13,14 +13,26 @@ const ProjectSchema = new mongoose.Schema({
     description: String,
     request: String,
     team: String,
-    period: Number,
+    period: {
+        startDate: String,
+        countDays: Number
+    },
     target: Number,
     bonus: String,
     isVerified: Boolean,
     amountCollected: Number,
+    comments: [{
+        user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+            required: true
+        },
+        text: String
+    }],
     donatsHistory: [{
         sum: Number,
-        user: String
+        user: String,
+        date:String
     }]
 },{timestamps: true,})
 

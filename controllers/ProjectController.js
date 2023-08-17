@@ -4,6 +4,7 @@ import NotVerifiedProjectModel from "../models/NotVerifiedProject.js";
 import UserModel from "../models/User.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
+import moment from 'moment';
 
 export const createProject = async (req, res) => {
   try {
@@ -47,6 +48,9 @@ export const createProject = async (req, res) => {
       console.log("newImages", newImages);
     }
 
+    const newPeriod = JSON.parse(period);
+
+    console.log('newPeriod',newPeriod);
     const project = await ProjectModel.create({
       projectMedia: newImages,
       user,
@@ -54,8 +58,9 @@ export const createProject = async (req, res) => {
       description,
       request,
       team,
-      period,
+      period: newPeriod,
       target,
+      amountCollected: 0,
       bonus,
       category,
       subcategory,
@@ -161,6 +166,7 @@ export const addVerifiedProject = async (req, res) => {
       return res.json({ message: "Project not found" });
     }
 
+    project.period.startDate = moment().utcOffset(3);
     project.isVerified = true;
     await project.save();
     
@@ -226,15 +232,46 @@ export const getAllNotVerifiedProject = async (req, res) => {
 }
 export const donatsToProject = async (req, res) => {
   try {
-    const {projectId, sum, user} = req.body;
+    const {projectId, sum, user, comment, userId} = req.body;
+    const date = moment().utcOffset(3).format('YYYY-MM-DD HH:mm:ss');
     const project = await ProjectModel.findById(projectId);
+    const currentuser = await UserModel.findById(userId);
+
+    console.log('projectId',projectId);
+    console.log('sum',sum);
+    console.log('user',user);
+    console.log('comment',comment);
+    console.log('userId',userId);
+
+    let totalSum = 0;
 
     project.donatsHistory.push({
       sum,
-      user
+      user,
+      date
     })
 
+    currentuser.donatesProjects.push({
+      project: project._id,
+      sum,
+      comment
+  })
+
+    project.donatsHistory.forEach((item) => {
+      totalSum += item.sum;
+    })
+
+    project.amountCollected = totalSum;
+
+    if(comment) {
+      project.comments.push({
+        user: userId,
+        text: comment
+      })
+    }
+
     await project.save();
+    await currentuser.save();
 
     res.json(project)
   } catch (error) {
