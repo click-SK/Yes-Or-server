@@ -21,6 +21,14 @@ const UserSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Project",
     }],
+    donatesProjects: [{
+        project: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Project",
+        },
+        sum: Number,
+        comment: String
+    }]
 },{timestamps: true,})
 
 export default mongoose.model('User',UserSchema)
