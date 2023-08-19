@@ -21,7 +21,11 @@ export const createProject = async (req, res) => {
       subcategory,
     } = req.body;
 
+    const newBonus = JSON.parse(bonus);
+
     console.log("WORK");
+    console.log("bonus",JSON.parse(bonus));
+    console.log("team",team);
 
     const user = await UserModel.findById(userId);
 
@@ -61,7 +65,7 @@ export const createProject = async (req, res) => {
       period: newPeriod,
       target,
       amountCollected: 0,
-      bonus,
+      bonus: newBonus,
       category,
       subcategory,
       isVerified: false,

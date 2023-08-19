@@ -12,13 +12,16 @@ const ProjectSchema = new mongoose.Schema({
     name: String,
     description: String,
     request: String,
-    team: String,
+    team: [String],
     period: {
         startDate: String,
         countDays: Number
     },
     target: Number,
-    bonus: String,
+    bonus: [{
+        title: String,
+        amount: String
+    }],
     isVerified: Boolean,
     amountCollected: Number,
     comments: [{
