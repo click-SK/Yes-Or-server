@@ -53,6 +53,7 @@ export const createProject = async (req, res) => {
     }
 
     const newPeriod = JSON.parse(period);
+    console.log('newPeriod',newPeriod);
 
     console.log('newPeriod',newPeriod);
     const project = await ProjectModel.create({
@@ -251,6 +252,7 @@ export const donatsToProject = async (req, res) => {
 
     project.donatsHistory.push({
       sum,
+      text: comment,
       user,
       date
     })
@@ -266,14 +268,7 @@ export const donatsToProject = async (req, res) => {
     })
 
     project.amountCollected = totalSum;
-
-    if(comment) {
-      project.comments.push({
-        user: userId,
-        text: comment
-      })
-    }
-
+    
     await project.save();
     await currentuser.save();
 

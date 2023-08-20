@@ -34,6 +34,7 @@ const ProjectSchema = new mongoose.Schema({
     }],
     donatsHistory: [{
         sum: Number,
+        text: String,
         user: String,
         date:String
     }]
