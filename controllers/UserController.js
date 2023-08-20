@@ -12,9 +12,9 @@ export const register = async (req, res) => {
       password,
       socialNetwork,
       phone,
-      passport,
-      requisites,
       isVerified,
+      passport,
+      requisites
     } = req.body;
 
     const userData = await UserService.registration(

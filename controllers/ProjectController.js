@@ -21,7 +21,11 @@ export const createProject = async (req, res) => {
       subcategory,
     } = req.body;
 
+    const newBonus = JSON.parse(bonus);
+
     console.log("WORK");
+    console.log("bonus",JSON.parse(bonus));
+    console.log("team",team);
 
     const user = await UserModel.findById(userId);
 
@@ -49,6 +53,7 @@ export const createProject = async (req, res) => {
     }
 
     const newPeriod = JSON.parse(period);
+    console.log('newPeriod',newPeriod);
 
     console.log('newPeriod',newPeriod);
     const project = await ProjectModel.create({
@@ -61,7 +66,7 @@ export const createProject = async (req, res) => {
       period: newPeriod,
       target,
       amountCollected: 0,
-      bonus,
+      bonus: newBonus,
       category,
       subcategory,
       isVerified: false,
@@ -247,6 +252,7 @@ export const donatsToProject = async (req, res) => {
 
     project.donatsHistory.push({
       sum,
+      text: comment,
       user,
       date
     })
@@ -262,14 +268,7 @@ export const donatsToProject = async (req, res) => {
     })
 
     project.amountCollected = totalSum;
-
-    if(comment) {
-      project.comments.push({
-        user: userId,
-        text: comment
-      })
-    }
-
+    
     await project.save();
     await currentuser.save();
 
