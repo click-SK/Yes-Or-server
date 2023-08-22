@@ -26,6 +26,7 @@ const UserSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Project",
         },
+        date: String,
         sum: Number,
         comment: String
     }]

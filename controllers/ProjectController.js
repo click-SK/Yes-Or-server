@@ -1,6 +1,7 @@
 import ProjectModel from "../models/Project.js";
 import VerifiedProjectModel from "../models/VerifiedProject.js";
 import NotVerifiedProjectModel from "../models/NotVerifiedProject.js";
+import MainPageProjectModel from "../models/MainPageProject.js";
 import UserModel from "../models/User.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
@@ -186,6 +187,7 @@ export const addVerifiedProject = async (req, res) => {
     console.log(error);
   }
 };
+
 export const removeVerifiedProject = async (req, res) => {
   try {
     const { projectId, currentId } = req.body;
@@ -218,9 +220,20 @@ export const removeVerifiedProject = async (req, res) => {
 
 export const getAllVerifiedProject = async (req, res) => {
   try {
-    const project = await VerifiedProjectModel.find().populate("projects");
+    // const project = await VerifiedProjectModel.find()
+    // .populate("projects")
+    // .populate("projects.user")
 
-    res.json(project);
+    const verifiedProjects = await VerifiedProjectModel.find()
+    .populate({
+      path: "projects",
+      populate: {
+        path: "user"
+      }
+    });
+
+    // res.json(project);
+    res.json(verifiedProjects);
   } catch (error) {
     console.log(error);
   }
@@ -235,6 +248,62 @@ export const getAllNotVerifiedProject = async (req, res) => {
     console.log(error);
   }
 }
+
+export const getMainPageProjects = async (req, res) => {
+  try {
+    const project = await MainPageProjectModel.find()
+    .populate('project')
+
+    res.json(project)
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export const addProjectToMainPage = async (req, res) => {
+  try {
+    const { projectId, currentId } = req.body;
+
+    const project = await ProjectModel.findById(projectId);
+
+    if (!project) {
+      return res.json({ message: "Project not found" });
+    }
+
+    const mainPageProject = await MainPageProjectModel.create({
+      project: project._id,
+    })
+
+    res.json(mainPageProject);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const removeProjectFromMainPage = async (req, res) => {
+  try {
+    const { projectId, currentId } = req.body;
+
+    const project = await ProjectModel.findById(projectId);
+    const mainPageProject = await MainPageProjectModel.findById(currentId)
+
+    if (!mainPageProject) {
+      return res.json({ message: "Project not found" });
+    }
+
+    if (!project) {
+      return res.json({ message: "Project not found" });
+    }
+
+    await MainPageProjectModel.findByIdAndDelete(currentId);
+
+    res.json({message: 'success'})
+
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const donatsToProject = async (req, res) => {
   try {
     const {projectId, sum, user, comment, userId} = req.body;
@@ -260,7 +329,8 @@ export const donatsToProject = async (req, res) => {
     currentuser.donatesProjects.push({
       project: project._id,
       sum,
-      comment
+      comment,
+      date
   })
 
     project.donatsHistory.forEach((item) => {

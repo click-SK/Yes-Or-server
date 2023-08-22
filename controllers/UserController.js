@@ -97,7 +97,17 @@ export const refresh = async (req, res) => {
 export const getMe = async (req, res) => {
   try {
     const userId = req.params.id;
-    const userData = await UserModel.findOne({_id: userId}).populate(['projects','savedProjects'])
+    // const userData = await UserModel.findOne({_id: userId})
+    // .populate('projects')
+    // .populate('savedProjects')
+    // .populate('donatesProjects.project')
+    const userData = await UserModel.findOne({_id: userId})
+    .populate('projects')
+    .populate('savedProjects')
+    .populate({
+      path: 'donatesProjects.project',
+      model: 'Project'
+    });
     return res.json(userData);
   } catch (e) {
     console.log(e);
@@ -105,7 +115,10 @@ export const getMe = async (req, res) => {
 };
 export const getAllUsers = async (req, res) => {
   try {
-    const userData = await UserModel.find();
+    const userData = await UserModel.find()
+    .populate('projects')
+    .populate('savedProjects')
+    .populate('donatesProjects.project');
     return res.json(userData);
   } catch (e) {
     console.log(e);
