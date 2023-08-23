@@ -19,6 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({storage})
 
 router.post('/create-project',upload.array('projectMedia'),ProjectController.createProject);
+router.patch('/update-project',upload.array('projectMedia'),ProjectController.updateProject);
 router.get('/get-all-projects',ProjectController.getAllProject);
 router.get('/get-one-project/:id', ProjectController.getOneProject);
 router.patch('/saved-project', ProjectController.savedProject);
