@@ -87,6 +87,75 @@ export const createProject = async (req, res) => {
     console.log(e);
   }
 };
+export const updateProject = async (req, res) => {
+  try {
+    const {
+      projectId,
+      name,
+      description,
+      request,
+      team,
+      period,
+      target,
+      bonus,
+      category,
+      subcategory,
+    } = req.body;
+
+    console.log('projectId',projectId);
+    console.log('name',name);
+    console.log('description',description);
+    console.log('request',request);
+    console.log('team',team);
+    console.log('period',period);
+    console.log('target',target);
+    console.log('bonus',bonus);
+    console.log('category',category);
+    console.log('subcategory',subcategory);
+
+    const project = await ProjectModel.findById(projectId);
+
+    const newBonus = JSON.parse(bonus);
+
+    const newImages = [];
+    console.log("req.files", req.files);
+    if (req.files && req.files.length > 0) {
+      // Process the uploaded files as needed
+      req.files.forEach((file) => {
+        console.log("file", file);
+        const uniqueFileName = uuidv4() + "_" + file.originalname; // замість `/uploadsUser/${file.filename}` тут повинна бути лише `file.originalname`
+        newImages.push(`/uploadsProject/${uniqueFileName}`);
+        fs.rename(
+          `./uploadsProject/${file.filename}`,
+          `./uploadsProject/${uniqueFileName}`,
+          (err) => {
+            if (err) throw err; // не удалось переименовать файл
+            console.log("Файл успешно переименован");
+          }
+        );
+      });
+      console.log("newImages", newImages);
+    }
+
+    const newPeriod = JSON.parse(period);
+
+    project.name = name;
+    project.description = description;
+    project.request = request;
+    project.team = team;
+    project.period = newPeriod;
+    project.target = target;
+    project.bonus = newBonus;
+    project.category = category;
+    project.subcategory = subcategory;
+
+    await project.save();
+
+    res.json(project);
+  } catch (e) {
+    console.log(e);
+  }
+};
 
 export const getAllProject = async (req, res) => {
   try {
