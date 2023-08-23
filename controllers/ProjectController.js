@@ -148,7 +148,7 @@ export const updateProject = async (req, res) => {
     project.bonus = newBonus;
     project.category = category;
     project.subcategory = subcategory;
-
+    project.projectMedia = newImages;
     await project.save();
 
     res.json(project);
