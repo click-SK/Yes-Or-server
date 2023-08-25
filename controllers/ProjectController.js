@@ -170,7 +170,8 @@ export const getAllProject = async (req, res) => {
 export const getOneProject = async (req, res) => {
   try {
     const { id } = req.params;
-    const project = await ProjectModel.findById(id);
+    const project = await ProjectModel.findById(id)
+    .populate('comments.user')
 
     res.json(project);
   } catch (error) {
@@ -417,3 +418,45 @@ export const donatsToProject = async (req, res) => {
   }
 }
 
+export const addComment = async (req, res) => {
+  try {
+    const {projectId, userId, comment, name, email} = req.body;
+
+    console.log('projectId',projectId);
+    console.log('userId',userId);
+    console.log('comment',comment);
+    console.log('name',name);
+    console.log('email',email);
+
+    if(!projectId) {
+      return res.json({message: 'Project not found'})
+    }
+
+    // if(!userId) {
+    //   return res.json({message: 'User not found'})
+    // }
+    const project = await ProjectModel.findById(projectId);
+    const date = moment().utcOffset(3).format('YYYY-MM-DD HH:mm:ss');
+
+    if(userId) {
+      project.comments.push({
+        user: userId,
+        text: comment,
+        date
+      }) 
+    } else {
+      project.comments.push({
+        text: comment,
+        name,
+        email,
+        date
+      }) 
+    }
+    
+    await project.save();
+
+    res.json(project);
+  } catch(error) {
+    console.log(error);
+  }
+}
