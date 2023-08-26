@@ -460,3 +460,34 @@ export const addComment = async (req, res) => {
     console.log(error);
   }
 }
+
+export const deleteOneComment = async (req, res) => {
+  try {
+    const {projectId, commentId} = req.body;
+    
+    if (!projectId || !commentId) {
+      return res.status(400).json({ message: 'Invalid input data' });
+    }
+
+    const project = await ProjectModel.findById(projectId);
+    if (!project) {
+      return res.status(404).json({ message: 'Project not found' });
+    }
+
+    const commentIndex = project.comments.findIndex(
+      (comment) => comment._id.toString() === commentId
+    );
+
+    if (commentIndex === -1) {
+      return res.status(404).json({ message: 'Comment not found' });
+    }
+
+    project.comments.splice(commentIndex, 1);
+
+    await project.save();
+
+    res.json('success')
+  } catch(error) {
+    console.log(error);
+  }
+}
