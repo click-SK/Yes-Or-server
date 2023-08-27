@@ -28,9 +28,12 @@ const ProjectSchema = new mongoose.Schema({
         user: {
             type: mongoose.Schema.Types.ObjectId,
             ref: "User",
-            required: true
+            required: false
         },
-        text: String
+        text: String,
+        name: String,
+        email: String,
+        date:String
     }],
     donatsHistory: [{
         sum: Number,

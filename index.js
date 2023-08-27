@@ -9,6 +9,7 @@ import UserRouter from './router/UserRouter.js';
 import AdminRouter from './router/AdminRouter.js';
 import ProjectRouter from './router/ProjectRouter.js';
 import ProjectCategoryRouter from './router/ProjectCategoryRouter.js';
+import MessagesRouter from './router/MessagesRouter.js';
 
 dotenv.config();
 
@@ -35,6 +36,7 @@ app.use('/api',UserRouter)
 app.use('/api',AdminRouter)
 app.use('/api',ProjectRouter)
 app.use('/api',ProjectCategoryRouter)
+app.use('/api',MessagesRouter)
 
 
 app.listen(process.env.PORT, () => {

@@ -32,4 +32,6 @@ router.get('/get-all-not-verified-projects', ProjectController.getAllNotVerified
 router.get('/get-project-main-page', ProjectController.getMainPageProjects);
 router.post('/add-project-main-page', ProjectController.addProjectToMainPage);
 router.delete('/remove-project-main-page', ProjectController.removeProjectFromMainPage);
+router.patch('/add-project-comment', ProjectController.addComment);
+router.delete('/delete-one-comment', ProjectController.deleteOneComment);
 export default router;
