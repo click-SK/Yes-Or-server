@@ -148,7 +148,7 @@ export const updateProject = async (req, res) => {
     project.target = target;
     project.bonus = newBonus;
     project.category = category;
-    project.subcategory = subcategory;
+    subcategory && (project.subcategory = subcategory);
     await project.save();
 
     res.json(project);
