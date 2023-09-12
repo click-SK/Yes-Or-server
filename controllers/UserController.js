@@ -236,6 +236,7 @@ export const updateUserData = async (req, res) => {
     user.passport = passport;
     user.requisites = requisites;
     user.email = email;
+    user.isVerified = false;
 
     await user.save();
 
