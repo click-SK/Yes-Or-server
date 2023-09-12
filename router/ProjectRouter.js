@@ -34,4 +34,6 @@ router.post('/add-project-main-page', ProjectController.addProjectToMainPage);
 router.delete('/remove-project-main-page', ProjectController.removeProjectFromMainPage);
 router.patch('/add-project-comment', ProjectController.addComment);
 router.delete('/delete-one-comment', ProjectController.deleteOneComment);
+router.post('/add-project-archive', ProjectController.AddProjectToArchive);
+router.get('/get-allarchive-projects', ProjectController.getAllArchiveProjects);
 export default router;
