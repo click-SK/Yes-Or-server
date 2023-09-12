@@ -3,6 +3,7 @@ import VerifiedProjectModel from "../models/VerifiedProject.js";
 import NotVerifiedProjectModel from "../models/NotVerifiedProject.js";
 import MainPageProjectModel from "../models/MainPageProject.js";
 import UserModel from "../models/User.js";
+import ArchivalProjectModel from "../models/ArchivalProject.js";
 import { v4 as uuidv4 } from "uuid";
 import fs from "fs";
 import moment from 'moment';
@@ -179,6 +180,8 @@ export const getOneProject = async (req, res) => {
   }
 };
 
+//--------- Saved projects
+
 export const savedProject = async (req, res) => {
   try {
     const { userId, projectId } = req.body;
@@ -226,6 +229,8 @@ export const removeSavedProject = async (req, res) => {
     console.log(error);
   }
 };
+
+//------Verified and not verified projects
 
 export const addVerifiedProject = async (req, res) => {
   try {
@@ -319,6 +324,8 @@ export const getAllNotVerifiedProject = async (req, res) => {
   }
 }
 
+//----- Project main page
+
 export const getMainPageProjects = async (req, res) => {
   try {
     const project = await MainPageProjectModel.find()
@@ -374,6 +381,8 @@ export const removeProjectFromMainPage = async (req, res) => {
   }
 };
 
+//-----------Donates
+
 export const donatsToProject = async (req, res) => {
   try {
     const {projectId, sum, user, comment, userId} = req.body;
@@ -417,6 +426,8 @@ export const donatsToProject = async (req, res) => {
     console.log(error);
   }
 }
+
+//------Comments
 
 export const addComment = async (req, res) => {
   try {
@@ -487,6 +498,92 @@ export const deleteOneComment = async (req, res) => {
     await project.save();
 
     res.json('success')
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+//------ Archive project
+
+export const AddProjectToArchive = async (req, res) => {
+  try {
+    const {projectId} = req.body;
+
+    const project = await ProjectModel.findById(projectId);
+
+    if (!project) {
+      return res.json({ message: "Project not found" });
+    }
+  
+    project.isVerified = false;
+    await project.save();
+
+    const archiveProject = await ArchivalProjectModel.create({
+      projects: project._id,
+    })
+  
+    await VerifiedProjectModel.findOneAndDelete({projects: projectId})
+  
+    res.json(archiveProject);
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+export const getAllArchiveProjects = async (req, res) => {
+  try {
+    const archiveProject = await ArchivalProjectModel.find()
+    .populate({
+      path: "projects",
+      populate: {
+        path: "user"
+      }
+    });
+
+    res.json(archiveProject)
+  } catch(error) {
+    console.log(error);
+  }
+}
+
+export const сheckingEndTimeProject = async (req, res) => {
+  try{
+    const verifiedProject = await VerifiedProjectModel.find()
+    .populate({
+      path: "projects",
+      populate: {
+        path: "user"
+      }
+    });
+    const currentTime = Date.now();
+
+    // verifiedProject.forEach((project) => {
+    //   console.log('project',project.projects.period.startDate);
+    // })
+    verifiedProject.forEach((project) => {
+      const projectStartDateString = project.projects.period.startDate; // "Mon Sep 11 2023 14:10:00 GMT+0300"
+      console.log('projectStartDateString',projectStartDateString);
+
+      // Перетворення рядкової дати в об'єкт Date
+      const projectStartDate = new Date(projectStartDateString);
+
+      console.log('projectStartDate',projectStartDate);
+      // Перетворення об'єкта Date у мітку часу в мілісекундах
+      const projectStartTimeStamp = projectStartDate.getTime();
+
+      console.log('projectStartTimeStamp',projectStartTimeStamp);
+
+      // Порівняння двох міток часу
+      if (currentTime > projectStartTimeStamp) {
+        console.log('Current time is greater than project start time');
+      } else {
+        console.log('Project start time is greater than or equal to current time');
+      }
+    });
+
+    console.log('currentTime',currentTime);
+
+
   } catch(error) {
     console.log(error);
   }
