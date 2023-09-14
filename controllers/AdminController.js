@@ -10,8 +10,8 @@ export const register = async (req, res) => {
     }
     await res.cookie('Y_O_A_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      secure: false,
+      httpOnly: false,
+      secure: true,
       sameSite: 'None'
   });
     return res.json(userData);
@@ -32,8 +32,8 @@ export const login = async (req, res) => {
 
     await res.cookie('Y_O_A_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      secure: false,
+      httpOnly: false,
+      secure: true,
       sameSite: 'None'
   });
     return res.json(userData);
@@ -62,8 +62,8 @@ export const refresh = async (req, res) => {
     }
     await res.cookie('Y_O_A_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: true,
-      secure: false,
+      httpOnly: false,
+      secure: true,
       sameSite: 'None'
   });
     return res.json(userData);
