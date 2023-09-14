@@ -15,7 +15,7 @@ const ProjectSchema = new mongoose.Schema({
     team: [String],
     period: {
         startDate: String,
-        countDays: Number
+        endDate: String,
     },
     target: Number,
     bonus: [{

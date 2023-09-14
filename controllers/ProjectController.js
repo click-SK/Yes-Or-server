@@ -548,6 +548,7 @@ export const getAllArchiveProjects = async (req, res) => {
 
 export const сheckingEndTimeProject = async (req, res) => {
   try{
+    console.log('func time work');
     const verifiedProject = await VerifiedProjectModel.find()
     .populate({
       path: "projects",
@@ -557,11 +558,8 @@ export const сheckingEndTimeProject = async (req, res) => {
     });
     const currentTime = Date.now();
 
-    // verifiedProject.forEach((project) => {
-    //   console.log('project',project.projects.period.startDate);
-    // })
-    verifiedProject.forEach((project) => {
-      const projectStartDateString = project.projects.period.startDate; // "Mon Sep 11 2023 14:10:00 GMT+0300"
+    verifiedProject.forEach( async (project) => {
+      const projectStartDateString = project.projects.period.endDate; // "Mon Sep 11 2023 14:10:00 GMT+0300"
       console.log('projectStartDateString',projectStartDateString);
 
       // Перетворення рядкової дати в об'єкт Date
@@ -575,9 +573,25 @@ export const сheckingEndTimeProject = async (req, res) => {
 
       // Порівняння двох міток часу
       if (currentTime > projectStartTimeStamp) {
-        console.log('Current time is greater than project start time');
+        console.log('Yes',project.projects._id);
+        const endProjectId = project.projects._id;
+
+        const projectOrigin = await ProjectModel.findById(endProjectId);
+
+        if (!projectOrigin) {
+          return res.json({ message: "Project not found" });
+        }
+      
+        projectOrigin.isVerified = false;
+        await projectOrigin.save();
+
+        const archiveProject = await ArchivalProjectModel.create({
+          projects: endProjectId,
+        })
+        const virifiedProject = await VerifiedProjectModel.findOneAndDelete({projects: endProjectId});
+
       } else {
-        console.log('Project start time is greater than or equal to current time');
+        console.log('No');
       }
     });
 

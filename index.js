@@ -13,8 +13,8 @@ import MessagesRouter from './router/MessagesRouter.js';
 import * as ProjectController from './controllers/ProjectController.js';
 
 const kyivTime = moment().tz('Europe/Kiev');
-const startTime = moment(kyivTime).set({ hour: 16, minute: 0, second: 0 }).valueOf();
-const endTime = moment(kyivTime).set({ hour: 17, minute: 0, second: 0 }).valueOf();
+const startTime = moment(kyivTime).set({ hour: 1, minute: 0, second: 0 }).valueOf();
+const endTime = moment(kyivTime).set({ hour: 2, minute: 0, second: 0 }).valueOf();
 
 dotenv.config();
 
@@ -43,14 +43,12 @@ app.use('/api',ProjectRouter)
 app.use('/api',ProjectCategoryRouter)
 app.use('/api',MessagesRouter)
 
-// setInterval(() => {
-//   const currentTime = Date.now();
-//   if (currentTime >= startTime && currentTime <= endTime) {
-//     ProjectController.сheckingEndTimeProject();
-//   }
-// }, 5000);
-
-// 900000
+setInterval(() => {
+  const currentTime = Date.now();
+  if (currentTime >= startTime && currentTime <= endTime) {
+    ProjectController.сheckingEndTimeProject();
+  }
+}, 900000);
 
 app.listen(process.env.PORT, () => {
     console.log('server start', process.env.PORT);
