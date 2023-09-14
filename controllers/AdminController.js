@@ -10,9 +10,9 @@ export const register = async (req, res) => {
     }
     await res.cookie('Y_O_A_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
-      sameSite: 'None'
+      sameSite: 'Lax'
   });
     return res.json(userData);
   } catch (error) {
@@ -32,9 +32,9 @@ export const login = async (req, res) => {
 
     await res.cookie('Y_O_A_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
-      sameSite: 'None'
+      sameSite: 'Lax'
   });
     return res.json(userData);
   } catch (e) {
@@ -62,9 +62,9 @@ export const refresh = async (req, res) => {
     }
     await res.cookie('Y_O_A_refreshToken', userData.refreshToken, {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      httpOnly: false,
+      httpOnly: true,
       secure: true,
-      sameSite: 'None'
+      sameSite: 'Lax'
   });
     return res.json(userData);
   } catch (e) {
