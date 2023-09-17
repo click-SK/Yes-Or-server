@@ -21,6 +21,7 @@ export const createProject = async (req, res) => {
       bonus,
       category,
       subcategory,
+      categoryOther
     } = req.body;
 
     const newBonus = JSON.parse(bonus);
@@ -71,6 +72,7 @@ export const createProject = async (req, res) => {
       bonus: newBonus,
       category,
       subcategory,
+      categoryOther,
       isVerified: false,
     });
 
@@ -99,8 +101,9 @@ export const updateProject = async (req, res) => {
       period,
       target,
       bonus,
-      category,
-      subcategory,
+      // category,
+      // subcategory,
+      // categoryOther
     } = req.body;
 
     console.log('projectId',projectId);
@@ -111,8 +114,8 @@ export const updateProject = async (req, res) => {
     console.log('period',period);
     console.log('target',target);
     console.log('bonus',bonus);
-    console.log('category',category);
-    console.log('subcategory',subcategory);
+    // console.log('category',category);
+    // console.log('subcategory',subcategory);
 
     const project = await ProjectModel.findById(projectId);
 
@@ -148,8 +151,9 @@ export const updateProject = async (req, res) => {
     project.period = newPeriod;
     project.target = target;
     project.bonus = newBonus;
-    project.category = category;
-    subcategory && (project.subcategory = subcategory);
+    // project.category = category;
+    // project.categoryOther = categoryOther;
+    // subcategory && (project.subcategory = subcategory);
     await project.save();
 
     res.json(project);
