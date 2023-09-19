@@ -9,6 +9,7 @@ const ProjectSchema = new mongoose.Schema({
     },
     category: String,
     subcategory: String,
+    categoryOther: String,
     name: String,
     description: String,
     request: String,
